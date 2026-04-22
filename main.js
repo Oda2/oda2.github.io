@@ -1,5 +1,6 @@
 const username = "oda2";
 
+/* GitHub profile */
 async function loadProfile() {
   const res = await fetch(`https://api.github.com/users/${username}`);
   const data = await res.json();
@@ -9,6 +10,7 @@ async function loadProfile() {
   bio.innerText = data.bio;
 }
 
+/* Repos as logs */
 async function loadRepos() {
   const res = await fetch(`https://api.github.com/users/${username}/repos?sort=stars`);
   const repos = await res.json();
@@ -17,46 +19,47 @@ async function loadRepos() {
 
   repos.slice(0, 6).forEach(repo => {
     const div = document.createElement("div");
-    div.className = "project";
+    div.className = "log-line";
 
     div.innerHTML = `
-      <strong><a href="${repo.html_url}" target="_blank">${repo.name}</a></strong>
-      <p>${repo.description || ""}</p>
-      ⭐ ${repo.stargazers_count}
+      [repo] <a href="${repo.html_url}" target="_blank">${repo.name}</a>
+      <span class="log-meta">⭐ ${repo.stargazers_count}</span>
     `;
 
     container.appendChild(div);
   });
 }
 
+/* Experience as services */
 function loadExperience() {
   const exp = document.getElementById("experience");
 
   exp.innerHTML = `
-    <div>
-      <strong>Mercado Livre</strong> — Tech Lead  
-      <p>Responsável por sistemas críticos de logística (20k+ RPM), atuando com microservices, SRE, observabilidade e arquitetura distribuída.</p>
+    <div class="service">
+      <strong>mercado-envios.outbound</strong>
+      <p>Role: Tech Lead | Scale: High | Status: Running</p>
     </div>
 
-    <div>
-      <strong>Softplan</strong> — Especialista / Senior  
-      <p>Atuação em sistemas jurídicos complexos com workflows stateful, Micro Front-Ends e Design System.</p>
+    <div class="service">
+      <strong>justice-platform.saj</strong>
+      <p>Role: Specialist | Domain: Legal Workflows | Status: Stable</p>
     </div>
 
-    <div>
-      <strong>OnClick</strong> — Analista  
-      <p>Integrações de eCommerce em larga escala com mensageria e sistemas distribuídos.</p>
+    <div class="service">
+      <strong>ecommerce-integrations</strong>
+      <p>Role: Engineer | Domain: Integrations | Status: Completed</p>
     </div>
   `;
 }
 
+/* Skills */
 function loadSkills() {
   const skills = [
     "Distributed Systems",
     "SRE / Observability",
-    "Go / Node.js",
-    "Kubernetes / AWS / GCP",
     "Microservices",
+    "Kubernetes / AWS / GCP",
+    "Go / Node.js",
     "High Scale Systems"
   ];
 
@@ -69,10 +72,18 @@ function loadSkills() {
   });
 }
 
+/* Fake realtime RPM */
+setInterval(() => {
+  const rpm = document.getElementById("rpm");
+  rpm.innerText = (20000 + Math.floor(Math.random() * 3000)) + " RPM";
+}, 3000);
+
+/* Lang */
 document.getElementById("lang").addEventListener("change", e => {
   applyI18n(e.target.value);
 });
 
+/* Init */
 applyI18n("pt");
 loadProfile();
 loadRepos();

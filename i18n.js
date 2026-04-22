@@ -2,26 +2,26 @@ const translations = {
   pt: {
     title: "Tech Lead | Sistemas Distribuídos | SRE",
     about: "Sobre",
-    about_text: "Tech Lead no Mercado Livre focado em sistemas críticos, alta escala e confiabilidade.",
-    experience: "Experiência",
-    projects: "Projetos",
-    skills: "Skills"
+    about_text: "Responsável por sistemas críticos de logística operando em alta escala (20k+ RPM), com foco em confiabilidade, observabilidade e arquitetura distribuída.",
+    experience: "Serviços (Experiência)",
+    projects: "Logs (Projetos)",
+    skills: "Capabilities"
   },
   en: {
     title: "Tech Lead | Distributed Systems | SRE",
     about: "About",
-    about_text: "Tech Lead at Mercado Livre focused on critical systems, high scale and reliability.",
-    experience: "Experience",
-    projects: "Projects",
-    skills: "Skills"
+    about_text: "Responsible for critical logistics systems operating at high scale (20k+ RPM), focused on reliability, observability and distributed architecture.",
+    experience: "Services (Experience)",
+    projects: "Logs (Projects)",
+    skills: "Capabilities"
   },
   es: {
     title: "Tech Lead | Sistemas Distribuidos | SRE",
     about: "Sobre",
-    about_text: "Tech Lead enfocado en sistemas críticos, alta escala y confiabilidad.",
-    experience: "Experiencia",
-    projects: "Proyectos",
-    skills: "Skills"
+    about_text: "Responsable de sistemas críticos de logística en alta escala (20k+ RPM), enfocado en confiabilidad y observabilidad.",
+    experience: "Servicios (Experiencia)",
+    projects: "Logs (Proyectos)",
+    skills: "Capacidades"
   }
 };
 
