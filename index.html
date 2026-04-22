@@ -1,7 +1,49 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <title>Oda.dev</title>
+  <link rel="stylesheet" href="style.css">
+</head>
 <body>
-<h1>Hello World</h1>
-<p>I'm hosted with GitHub Pages.</p>
+  <div class="crt">
+    <header>
+      <h1>ODA // SYSTEM</h1>
+
+      <select id="lang">
+        <option value="pt">PT</option>
+        <option value="en">EN</option>
+        <option value="es">ES</option>
+      </select>
+    </header>
+
+    <section class="card">
+      <img id="avatar" />
+      <h2 id="name"></h2>
+      <p id="bio"></p>
+    </section>
+
+    <section class="card">
+      <h3 data-i18n="about_title"></h3>
+      <p data-i18n="about_text"></p>
+    </section>
+
+    <section class="card">
+      <h3 data-i18n="stack_title"></h3>
+      <ul>
+        <li>Go / Node.js / .NET</li>
+        <li>Distributed Systems</li>
+        <li>Kubernetes / AWS / GCP</li>
+        <li>Observability / SRE</li>
+      </ul>
+    </section>
+
+    <footer>
+      <p>© Oda</p>
+    </footer>
+  </div>
+
+  <script src="i18n.js"></script>
+  <script src="main.js"></script>
 </body>
 </html>
