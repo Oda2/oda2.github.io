@@ -2,94 +2,93 @@
 <html lang="pt">
 <head>
   <meta charset="UTF-8">
-  <title>Oda | SRE Dashboard</title>
+  <title>Renato Oda | Systems</title>
   <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
-<body>
 
+<body>
 <div class="container">
 
-  <header>
-    <div class="left">
-      <h1>Renato Oda</h1>
-      <p id="title"></p>
+<header>
+  <div>
+    <h1>Renato Oda</h1>
+    <p id="title"></p>
+  </div>
+
+  <nav class="nav">
+    <a href="https://github.com/oda2" target="_blank">GitHub</a>
+    <a href="https://www.linkedin.com/in/renatooda/" target="_blank">LinkedIn</a>
+    <a href="mailto:renato.oda2@gmail.com">Contact</a>
+    <select id="lang">
+      <option value="pt">PT</option>
+      <option value="en">EN</option>
+      <option value="es">ES</option>
+    </select>
+  </nav>
+</header>
+
+<!-- DASHBOARD -->
+<section class="dashboard">
+  <div class="metric"><span>Status</span><strong class="ok">● Operational</strong></div>
+  <div class="metric"><span>Throughput</span><strong id="rpm">20k RPM</strong></div>
+  <div class="metric"><span>Availability</span><strong>99.9%</strong></div>
+  <div class="metric"><span>Scope</span><strong>Global</strong></div>
+</section>
+
+<!-- GRAPH -->
+<section class="card">
+  <h3>Throughput (simulado)</h3>
+  <canvas id="chart"></canvas>
+</section>
+
+<!-- EXPERIENCE -->
+<section class="card">
+  <h3 data-i18n="experience"></h3>
+  <div class="exp">
+
+    <div class="exp-item">
+      <strong>Mercado Livre</strong>
+      <span>Tech Lead</span>
+      <p>Sistemas críticos de logística (outbound), 20k+ RPM, arquitetura distribuída, observabilidade e operação 24/7.</p>
     </div>
 
-    <div class="right">
-      <div class="links">
-        <a href="https://github.com/oda2" target="_blank">
-          <img src="https://img.shields.io/badge/GitHub-oda2-181717?logo=github">
-        </a>
-        <a href="https://www.linkedin.com/in/renatooda/" target="_blank">
-          <img src="https://img.shields.io/badge/LinkedIn-Renato%20Oda-0A66C2?logo=linkedin">
-        </a>
-        <a href="mailto:renato.oda2@gmail.com" class="email">Contact</a>
-      </div>
-
-      <select id="lang">
-        <option value="pt">PT</option>
-        <option value="en">EN</option>
-        <option value="es">ES</option>
-      </select>
+    <div class="exp-item">
+      <strong>Softplan</strong>
+      <span>Especialista / Senior</span>
+      <p>Plataforma jurídica (SAJ), workflows complexos, Micro Frontends e Design System corporativo.</p>
     </div>
-  </header>
 
-  <!-- DASHBOARD -->
-  <section class="dashboard">
-    <div class="metric">
-      <span>STATUS</span>
-      <strong class="ok">● OPERATIONAL</strong>
+    <div class="exp-item">
+      <strong>OnClick</strong>
+      <span>Analista</span>
+      <p>Integrações de eCommerce em larga escala com múltiplos gateways e ERPs.</p>
     </div>
-    <div class="metric">
-      <span>THROUGHPUT</span>
-      <strong id="rpm">20k RPM</strong>
+
+    <div class="exp-item">
+      <strong>Sypan</strong>
+      <span>Developer</span>
+      <p>Sistemas comerciais com foco fiscal (NFe/ECF) e integração com clientes.</p>
     </div>
-    <div class="metric">
-      <span>AVAILABILITY</span>
-      <strong>99.9%</strong>
-    </div>
-    <div class="metric">
-      <span>INCIDENTS</span>
-      <strong>LOW</strong>
-    </div>
-  </section>
 
-  <!-- PROFILE -->
-  <section class="card profile">
-    <img id="avatar">
-    <div>
-      <h2 id="name"></h2>
-      <p id="bio"></p>
-    </div>
-  </section>
+  </div>
+</section>
 
-  <!-- ABOUT -->
-  <section class="card">
-    <h3 data-i18n="about"></h3>
-    <p data-i18n="about_text"></p>
-  </section>
+<!-- PROJECTS -->
+<section class="card">
+  <h3 data-i18n="projects"></h3>
+  <div id="projects"></div>
+</section>
 
-  <!-- EXPERIENCE -->
-  <section class="card">
-    <h3 data-i18n="experience"></h3>
-    <div id="experience"></div>
-  </section>
+<!-- TERMINAL -->
+<section class="card terminal">
+  <div id="terminal-output"></div>
+  <input id="terminal-input" placeholder="type: help" />
+</section>
 
-  <!-- PROJECTS -->
-  <section class="card">
-    <h3 data-i18n="projects"></h3>
-    <div id="projects"></div>
-  </section>
-
-  <!-- SKILLS -->
-  <section class="card">
-    <h3 data-i18n="skills"></h3>
-    <ul id="skills"></ul>
-  </section>
-
-  <footer>
-    <p>🟢 Systems Operating</p>
-  </footer>
+<footer>
+  <p>🟢 Systems Operating</p>
+</footer>
 
 </div>
 

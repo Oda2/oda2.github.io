@@ -1,8 +1,7 @@
 body {
-  background: #0d1117;
-  color: #c9d1d9;
+  background: #0b0f14;
+  color: #d1d5db;
   font-family: system-ui;
-  margin: 0;
 }
 
 .container {
@@ -15,100 +14,89 @@ header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  flex-wrap: wrap;
 }
 
-.right {
+.nav {
   display: flex;
-  align-items: center;
-  gap: 15px;
-}
-
-.links {
-  display: flex;
-  gap: 10px;
+  gap: 20px;
   align-items: center;
 }
 
-.email {
-  color: #58a6ff;
-  font-size: 13px;
+.nav a {
   text-decoration: none;
+  color: #9ca3af;
+  font-size: 14px;
+}
+
+.nav a:hover {
+  color: #fff;
 }
 
 .card {
-  border: 1px solid #30363d;
+  background: #11161c;
+  border: 1px solid #1f2933;
+  border-radius: 10px;
   padding: 20px;
   margin-top: 20px;
-  border-radius: 10px;
-  background: #161b22;
 }
 
-.profile {
-  display: flex;
-  gap: 15px;
-}
-
-img {
-  width: 90px;
-  border-radius: 50%;
-}
-
-/* DASHBOARD */
-
+/* dashboard */
 .dashboard {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
   gap: 15px;
-  margin-top: 20px;
-}
-
-.metric {
-  background: #161b22;
-  border: 1px solid #30363d;
-  padding: 15px;
-  border-radius: 8px;
 }
 
 .metric span {
   font-size: 12px;
-  color: #8b949e;
+  color: #6b7280;
 }
 
 .metric strong {
   display: block;
   font-size: 18px;
-  margin-top: 5px;
 }
 
 .ok {
-  color: #3fb950;
-  animation: pulse 2s infinite;
+  color: #22c55e;
 }
 
-@keyframes pulse {
-  0% { opacity: 0.6; }
-  50% { opacity: 1; }
-  100% { opacity: 0.6; }
+/* experience */
+.exp-item {
+  margin-bottom: 15px;
 }
 
-/* PROJECT LOG STYLE */
+.exp-item strong {
+  display: block;
+  font-size: 16px;
+}
 
-.log-line {
+.exp-item span {
+  font-size: 12px;
+  color: #6b7280;
+}
+
+/* projects */
+.project {
+  border-top: 1px solid #1f2933;
+  padding: 10px 0;
+}
+
+/* terminal */
+.terminal {
+  background: black;
+  color: #00ff9f;
   font-family: monospace;
-  font-size: 13px;
-  padding: 5px 0;
 }
 
-.log-meta {
-  color: #f2cc60;
-  margin-left: 10px;
+#terminal-output {
+  height: 150px;
+  overflow-y: auto;
 }
 
-/* SERVICES */
-
-.service {
-  border-left: 3px solid #3fb950;
-  padding-left: 10px;
-  margin-top: 10px;
+#terminal-input {
+  width: 100%;
+  background: black;
+  border: none;
+  color: #00ff9f;
 }
