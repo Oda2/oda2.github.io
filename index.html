@@ -1,49 +1,80 @@
 <!DOCTYPE html>
 <html lang="pt">
+
 <head>
-  <meta charset="UTF-8">
-  <title>Oda.dev</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <title>Oda | Tech Lead</title>
+    <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
-  <div class="crt">
-    <header>
-      <h1>ODA // SYSTEM</h1>
+    <div class="container">
 
-      <select id="lang">
-        <option value="pt">PT</option>
-        <option value="en">EN</option>
-        <option value="es">ES</option>
-      </select>
-    </header>
+        <header>
+            <div class="left">
+                <h1>Renato Oda</h1>
+                <p id="title"></p>
+            </div>
 
-    <section class="card">
-      <img id="avatar" />
-      <h2 id="name"></h2>
-      <p id="bio"></p>
-    </section>
+            <div class="right">
+                <div class="links">
+                    <a href="https://github.com/oda2" target="_blank">
+                        <img src="https://img.shields.io/badge/GitHub-oda2-181717?logo=github">
+                    </a>
 
-    <section class="card">
-      <h3 data-i18n="about_title"></h3>
-      <p data-i18n="about_text"></p>
-    </section>
+                    <a href="https://www.linkedin.com/in/renatooda/" target="_blank">
+                        <img src="https://img.shields.io/badge/LinkedIn-Renato%20Oda-0A66C2?logo=linkedin">
+                    </a>
 
-    <section class="card">
-      <h3 data-i18n="stack_title"></h3>
-      <ul>
-        <li>Go / Node.js / .NET</li>
-        <li>Distributed Systems</li>
-        <li>Kubernetes / AWS / GCP</li>
-        <li>Observability / SRE</li>
-      </ul>
-    </section>
+                    <a href="mailto:renato.oda2@gmail.com" class="email">
+                        Email
+                    </a>
+                </div>
 
-    <footer>
-      <p>© Oda</p>
-    </footer>
-  </div>
+                <select id="lang">
+                    <option value="pt">PT</option>
+                    <option value="en">EN</option>
+                    <option value="es">ES</option>
+                </select>
+            </div>
+        </header>
 
-  <script src="i18n.js"></script>
-  <script src="main.js"></script>
+        <section class="card profile">
+            <img id="avatar">
+            <div>
+                <h2 id="name"></h2>
+                <p id="bio"></p>
+            </div>
+        </section>
+
+        <section class="card">
+            <h3 data-i18n="about"></h3>
+            <p data-i18n="about_text"></p>
+        </section>
+
+        <section class="card">
+            <h3 data-i18n="experience"></h3>
+            <div id="experience"></div>
+        </section>
+
+        <section class="card">
+            <h3 data-i18n="projects"></h3>
+            <div id="projects"></div>
+        </section>
+
+        <section class="card">
+            <h3 data-i18n="skills"></h3>
+            <ul id="skills"></ul>
+        </section>
+
+        <footer>
+            <p>© Oda</p>
+        </footer>
+
+    </div>
+
+    <script src="i18n.js"></script>
+    <script src="main.js"></script>
 </body>
+
 </html>

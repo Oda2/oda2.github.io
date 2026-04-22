@@ -1,28 +1,34 @@
 const translations = {
   pt: {
-    about_title: "Sobre",
-    about_text: "Tech Lead focado em sistemas distribuídos, alta escala e confiabilidade.",
-    stack_title: "Stack / Especialidades"
+    title: "Tech Lead | Sistemas Distribuídos | SRE",
+    about: "Sobre",
+    about_text: "Tech Lead no Mercado Livre focado em sistemas críticos, alta escala e confiabilidade.",
+    experience: "Experiência",
+    projects: "Projetos",
+    skills: "Skills"
   },
   en: {
-    about_title: "About",
-    about_text: "Tech Lead focused on distributed systems, high scale and reliability.",
-    stack_title: "Stack / Expertise"
+    title: "Tech Lead | Distributed Systems | SRE",
+    about: "About",
+    about_text: "Tech Lead at Mercado Livre focused on critical systems, high scale and reliability.",
+    experience: "Experience",
+    projects: "Projects",
+    skills: "Skills"
   },
   es: {
-    about_title: "Sobre",
-    about_text: "Tech Lead enfocado en sistemas distribuidos, alta escala y confiabilidad.",
-    stack_title: "Stack / Especialidades"
+    title: "Tech Lead | Sistemas Distribuidos | SRE",
+    about: "Sobre",
+    about_text: "Tech Lead enfocado en sistemas críticos, alta escala y confiabilidad.",
+    experience: "Experiencia",
+    projects: "Proyectos",
+    skills: "Skills"
   }
 };
 
-function setLanguage(lang) {
+function applyI18n(lang) {
+  document.getElementById("title").innerText = translations[lang].title;
+
   document.querySelectorAll("[data-i18n]").forEach(el => {
-    const key = el.getAttribute("data-i18n");
-    el.innerText = translations[lang][key];
+    el.innerText = translations[lang][el.dataset.i18n];
   });
 }
-
-document.getElementById("lang").addEventListener("change", (e) => {
-  setLanguage(e.target.value);
-});

@@ -1,52 +1,72 @@
 body {
-  background: #0a0a0a;
-  color: #00ff9f;
-  font-family: "Courier New", monospace;
-  margin: 0;
+    background: #0d1117;
+    color: #c9d1d9;
+    font-family: system-ui;
+    margin: 0;
 }
 
-.crt {
-  padding: 20px;
-  max-width: 800px;
-  margin: auto;
-}
-
-/* CRT effect */
-.crt::after {
-  content: "";
-  position: fixed;
-  top:0; left:0;
-  width:100%; height:100%;
-  background: repeating-linear-gradient(
-    0deg,
-    rgba(0,255,0,0.03),
-    rgba(0,255,0,0.03) 1px,
-    transparent 1px,
-    transparent 2px
-  );
-  pointer-events:none;
+.container {
+    max-width: 900px;
+    margin: auto;
+    padding: 20px;
 }
 
 header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.right {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.links {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.email {
+    color: #58a6ff;
+    font-size: 13px;
+    text-decoration: none;
 }
 
 .card {
-  border: 2px solid #00ff9f;
-  padding: 15px;
-  margin-top: 20px;
-  box-shadow: 0 0 10px #00ff9f;
+    border: 1px solid #30363d;
+    padding: 20px;
+    margin-top: 20px;
+    border-radius: 10px;
+    background: #161b22;
+}
+
+.profile {
+    display: flex;
+    gap: 15px;
 }
 
 img {
-  width: 80px;
-  border-radius: 50%;
+    width: 90px;
+    border-radius: 50%;
 }
 
-select {
-  background: black;
-  color: #00ff9f;
-  border: 1px solid #00ff9f;
+h1,
+h2,
+h3 {
+    margin: 0 0 10px;
+}
+
+.project {
+    border-top: 1px solid #30363d;
+    padding-top: 10px;
+    margin-top: 10px;
+}
+
+a {
+    color: #58a6ff;
+    text-decoration: none;
 }
