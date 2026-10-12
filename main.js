@@ -1,302 +1,524 @@
 const username = "oda2";
 
+/* ------------------------------------------------------------------ *
+ * Career data (language independent structure).
+ * Dates are "YYYY-MM"; `end: null` means the role/company is ongoing.
+ * Consecutive entries for the same company are merged into a single
+ * group on the timeline — only role changes are listed inside it.
+ * ------------------------------------------------------------------ */
+const career = [
+  {
+    id: "ml",
+    company: "Mercado Livre",
+    start: "2021-08",
+    end: null,
+    current: true,
+    roles: [
+      { key: "ml2", roleKey: "techLead", start: "2025-07", end: null, current: true },
+      { key: "ml1", roleKey: "srEngineer", start: "2021-08", end: "2025-06" }
+    ]
+  },
+  {
+    id: "voll",
+    company: "VOLL",
+    start: "2021-05",
+    end: "2021-07",
+    roles: [{ key: "voll", roleKey: "specialistDev", start: "2021-05", end: "2021-07" }]
+  },
+  {
+    id: "softplan",
+    company: "Softplan",
+    start: "2018-10",
+    end: "2021-05",
+    roles: [
+      { key: "sp3", roleKey: "specialistDev", start: "2020-12", end: "2021-05" },
+      { key: "sp2", roleKey: "developer", start: "2020-07", end: "2020-12" },
+      { key: "sp1", roleKey: "developer", start: "2018-10", end: "2020-07" }
+    ]
+  },
+  {
+    id: "onclick",
+    company: "OnClick Sistemas",
+    start: "2013-06",
+    end: "2018-09",
+    roles: [{ key: "onclick", roleKey: "systemsAnalyst", start: "2013-06", end: "2018-09" }]
+  },
+  {
+    id: "sypan",
+    company: "SYSPAN",
+    start: "2012-04",
+    end: "2013-06",
+    roles: [{ key: "sypan", roleKey: "developer", start: "2012-04", end: "2013-06" }]
+  },
+  {
+    id: "cnpm",
+    company: "CNPM Tecnologia",
+    start: "2009-12",
+    end: "2012-04",
+    roles: [{ key: "cnpm", roleKey: "developer", start: "2009-12", end: "2012-04" }]
+  }
+];
+
+/* ------------------------------------------------------------------ *
+ * Certifications (newest first).
+ * `url` is optional: when omitted the link is derived from the
+ * credential code for known issuers (Udemy). Add `url` to any entry to
+ * point it at a specific credential page (Credly, LinkedIn, issuer...).
+ * ------------------------------------------------------------------ */
+const certifications = [
+  { name: "AI Fluency: Framework & Foundations", issuer: "Anthropic", issued: "2026-03" },
+  { name: "Master LangChain & Gen AI -Build #16 AI Apps HuggingFace LLM", issuer: "Udemy", issued: "2025-11", credential: "UC-5a8f1fc4-41f9-49ec-bb52-24e84411f005", skills: ["LangChain", "Gen AI"] },
+  { name: "IA para Devs", issuer: "Rocketseat", issued: "2025-03", credential: "998ab9e9-e988-4cf8-b1ed-4778f8c05c87" },
+  { name: "New Relic APM: Application Performance Management for DevOps", issuer: "Udemy", issued: "2023-03", credential: "UC-9f42d513-8835-43a7-b04a-6185c6dc0a72", skills: ["APM"] },
+  { name: "Comunicação Assertiva", issuer: "Udemy", issued: "2023-02", credential: "UC-53ad5530-1a3c-41ce-b3d1-16050c4a5828" },
+  { name: "The Complete Introduction to New Relic One (With APM)", issuer: "Udemy", issued: "2022-02", credential: "UC-6d0f497a-f99b-43bd-b35a-99da26cca624", skills: ["APM"] },
+  { name: "Inteligência Emocional: Fundamentos e como Desenvolver", issuer: "Udemy", issued: "2022-02", credential: "UC-b4949b33-f983-4c27-86eb-1fea72344206" },
+  { name: "Avançando com Go Lang", issuer: "School of Net", issued: "2018-11", credential: "7c3a2b9e-a6b0-488e-92be-f62db558ef64" },
+  { name: "Iniciando com Go para Web", issuer: "School of Net", issued: "2018-11", credential: "39d9bba0-e89b-4909-a107-ade9acb331f6" },
+  { name: "Iniciando com Istio", issuer: "School of Net", issued: "2018-11", credential: "8a543a73-b7d8-418b-9fe0-3bf9cee9ea4d" },
+  { name: "Avançando com React e Redux - Redux Thunks", issuer: "School of Net", issued: "2018-10", credential: "5ba3dfb7-5c4b-440e-9340-40f1b849d2a3" },
+  { name: "Progressive Web Apps", issuer: "School of Net", issued: "2018-04", credential: "845b4785-d523-4223-ab6c-0c955d192e69" },
+  { name: "PWA com Vue.js", issuer: "School of Net", issued: "2018-04", credential: "e8ebc989-f797-4783-9253-46224b3e3100" },
+  { name: "PWA com Vue.js - Parte 2", issuer: "School of Net", issued: "2018-04", credential: "2035a927-e437-4e72-bfab-5a1efe92df84" },
+  { name: "Avançando com Jenkins", issuer: "School of Net", issued: "2018-02", credential: "6c219194-e2ae-4083-995d-a5da5b3790ee" },
+  { name: "Criando API's com Node.js, GraphQL, JWT, Sequelize e TS", issuer: "Udemy", issued: "2018-02", credential: "UC-KB4MH74N" },
+  { name: "MEVN Stack - Mongo, Express, Vue.js e Node.js", issuer: "School of Net", issued: "2017-08", credential: "96dcbc55-14a1-479e-9f04-f2aa584bd4cd" },
+  { name: "Nodejs com Firebase", issuer: "School of Net", issued: "2017-05", credential: "774fadf7-3413-4c65-90d7-cfe965e88c51" },
+  { name: "Plataforma de Chat com Node.JS e Socket.IO", issuer: "School of Net", issued: "2017-05", credential: "bac880a9-a0a3-40e2-9412-bd30afe09ef3" },
+  { name: "Certificação em API's", issuer: "Sensedia", issued: "2017-05" },
+  { name: "Autenticação com Vue.js 2", issuer: "School of Net", issued: "2017-04", credential: "df243b72-52c0-4afa-a895-43684a5686f2" },
+  { name: "Vue 2.0 com VueX", issuer: "School of Net", issued: "2017-03", credential: "617937d0-2a36-498f-bddf-40bda557631f" },
+  { name: "Linux no Terminal", issuer: "School of Net", issued: "2017-03", credential: "42f5b061-0fbf-4236-b0f1-589b0a7279e9" },
+  { name: "Introdução ao Ionic 2", issuer: "School of Net", issued: "2017-03", credential: "72b2ad54-d147-47ef-8365-7ee28b4d3979" },
+  { name: "HTML 5", issuer: "School of Net", issued: "2017-02", credential: "ff611067-d452-45df-8e11-c68fec6e2110" },
+  { name: "Sass", issuer: "School of Net", issued: "2017-02", credential: "19feeddb-4820-4e28-981c-a29fc4d6e2ba" },
+  { name: "React Native", issuer: "School of Net", issued: "2017-02", credential: "70312557-bb0e-4c67-ab6f-9a5a077060d2" },
+  { name: "ReactJS", issuer: "School of Net", issued: "2017-01", credential: "4d1c154e-e0a8-4b64-9a0a-3973f805aa16" },
+  { name: "Ionic 2 com PagSeguro", issuer: "School of Net", issued: "2017-01", credential: "8d311579-1148-4aea-ba97-ef5e25e28721" },
+  { name: "Vue.js 2.0", issuer: "School of Net", issued: "2017-01", credential: "242f707b-b859-4f76-99f9-0a222615c584" },
+  { name: "Curso de Iniciando com Docker", issuer: "School of Net", issued: "2017-01", credential: "78163905-885c-4276-a0e9-df5ccd364d93" },
+  { name: "Curso de Gulp", issuer: "School of Net", issued: "2017-01", credential: "7040c4d4-acda-408a-a0bd-d2d3f416e7b2" },
+  { name: "Curso de ES6", issuer: "School of Net", issued: "2017-01" },
+  { name: "Curso de Iniciando com Go Lang", issuer: "School of Net", issued: "2017-01", credential: "37101572-fac4-475c-b79b-cbd0651651a2" },
+  { name: "Curso Completo do Desenvolvedor NodeJS e MongoDB", issuer: "Udemy", issued: "2017-01", credential: "91NSSKGL" },
+  { name: "Curso de Yeoman", issuer: "School of Net", issued: "2016-12", credential: "7ef19bfb-53c6-4bbd-a879-3de9bd420d3c" },
+  { name: "Curso de AdonisJs - MVC framework", issuer: "School of Net", issued: "2016-12", credential: "0665176b-65d3-44a7-8fc1-41a4ec6c3ac3" },
+  { name: "Curso de Análise de dados com IBM Watson", issuer: "School of Net", issued: "2016-12", credential: "ab1a8040-9f60-4b5a-ac63-ea5897864515" },
+  { name: "Curso de Iniciando com Electron", issuer: "School of Net", issued: "2016-12", credential: "12e18bca-a1bd-4ce3-adbf-568c01c8c164" },
+  { name: "Curso de Entrega contínua com Heroku", issuer: "School of Net", issued: "2016-12", credential: "83d55f1f-ed16-4d70-b240-5f904185df21" },
+  { name: "Curso de Angular 2 - Componentes e Serviços", issuer: "School of Net", issued: "2016-11", credential: "c2e8ed8e-a828-4f70-8874-55155562d120" },
+  { name: "Curso de Testes unitários com Node.js", issuer: "School of Net", issued: "2016-11", credential: "c06b6360-aadf-4a7d-8b2c-581d318e1aca" },
+  { name: "Curso de Angular 2.0: Primeiros passos", issuer: "School of Net", issued: "2016-11", credential: "8d3c02fc-86bd-4426-b9a4-ecb3c059a55e" },
+  { name: "Curso de Express.io", issuer: "School of Net", issued: "2016-11", credential: "879c9831-8af5-4854-9fb9-c59386dd6456" },
+  { name: "Curso de Desenvolvimento de Apis com Node.js", issuer: "School of Net", issued: "2016-11", credential: "93eb6ecb-b9c4-4ce9-a8b3-c87fa91a27ff" },
+  { name: "Curso de Node.js com Express, Jade e Sequelize", issuer: "School of Net", issued: "2016-11", credential: "7a6467d5-67ec-4310-8be6-cb0fd647261e" },
+  { name: "Curso de Typescript", issuer: "School of Net", issued: "2016-11", credential: "fd3ade19-19a6-4180-bba4-6fa4ae27844d" },
+  { name: "Autenticação com Node.js e Passport", issuer: "School of Net", issued: "2016-11", credential: "04ea7a2c-d377-4588-acfa-a7eea1ae52c6" },
+  { name: "Curso de Javascript Avançado", issuer: "School of Net", issued: "2016-10", credential: "c3f4d68c-50e9-4a95-9df5-5b41b6886bdc" },
+  { name: "Curso de Sails", issuer: "School of Net", issued: "2016-10", credential: "2396b365-f6fc-4df6-8590-a3f9d759fc71" },
+  { name: "Curso de Node com Express.js", issuer: "School of Net", issued: "2016-10", credential: "9956addc-db31-4bfa-964b-114408fe3ced" },
+  { name: "Curso de Javascript Básico", issuer: "School of Net", issued: "2016-09", credential: "e46b3c4d-ce51-4c2e-9338-bbee4b6a4acb" },
+  { name: "Curso de Orientação a objetos com javascript", issuer: "School of Net", issued: "2016-09", credential: "9969b3f2-be99-4a89-b1fa-7e14a175e12b" },
+  { name: "Fluência Duolingo em Inglês: Elementar (estimativa)", issuer: "Duolingo", issued: "2016-08" },
+];
+
+/* ------------------------------------------------------------------ *
+ * Education (periods are years only; `logo` is optional — when empty
+ * a monogram badge is rendered instead. Drop the image files anywhere
+ * and set e.g. logo: "assets/senac.png" to use them).
+ * ------------------------------------------------------------------ */
+const education = [
+  { institution: "Senac Brasil", monogram: "SB", degreeKey: "games", start: "2014", end: "2015" },
+  { institution: "Unoeste", monogram: "UN", degreeKey: "multiplatform", start: "2012", end: "2013" },
+  { institution: "ETEC - Escola Técnica Estadual de São Paulo", monogram: "ET", degreeKey: "javaWeb", start: "2011", end: "2011" },
+  { institution: "FADAP/FAP", monogram: "FA", degreeKey: "networks", start: "2009", end: "2011" },
+  { institution: "ETEC - Escola Técnica Estadual de São Paulo", monogram: "ET", degreeKey: "informatics", start: "2008", end: "2009" }
+];
+
+/* ------------------------------ utils ----------------------------- */
+
+function parseMonth(value) {
+  if (!value) return null;
+  const [year, month] = value.split("-").map(Number);
+  return { year, month };
+}
+
+function endMonth(entry) {
+  if (entry.end) return parseMonth(entry.end);
+  const now = new Date();
+  return { year: now.getFullYear(), month: now.getMonth() + 1 };
+}
+
+function monthsBetween(start, end) {
+  const from = parseMonth(start);
+  const to = end ? parseMonth(end) : endMonth({});
+  return Math.max(0, (to.year - from.year) * 12 + (to.month - from.month)) + 1;
+}
+
+function formatPeriod(entry, t) {
+  const from = parseMonth(entry.start);
+  const to = endMonth(entry);
+  const fromLabel = `${t.months[from.month - 1]} ${from.year}`;
+  const toLabel = entry.end ? `${t.months[to.month - 1]} ${to.year}` : t.present;
+  return `${fromLabel} – ${toLabel}`;
+}
+
+function formatDuration(start, end, t) {
+  const total = monthsBetween(start, end);
+  const years = Math.floor(total / 12);
+  const months = total % 12;
+  if (total === 0) return "";
+  if (years === 0) return t.monthsOnly(months);
+  return t.yearsMonths(years, months);
+}
+
+function totalExperienceLabel(t) {
+  const first = career[career.length - 1];
+  const total = monthsBetween(first.start, null);
+  const years = Math.floor(total / 12);
+  const label = years >= 1 ? t.years(years) : t.monthsOnly(total);
+  return t.summary(label, career.length);
+}
+
+function escapeHtml(value) {
+  return String(value).replace(/[&<>"']/g, ch => ({
+    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+  })[ch]);
+}
+
+/* ------------------------------ avatar ---------------------------- */
+
 async function loadAvatar() {
   try {
     const res = await fetch(`https://api.github.com/users/${username}`);
     const data = await res.json();
-    if (data.avatar_url) {
-      document.getElementById("avatar-img").src = data.avatar_url;
-    }
+    if (data.avatar_url) document.getElementById("avatar-img").src = data.avatar_url;
   } catch (e) {
     console.error("Failed to load avatar:", e);
   }
 }
 
-function formatDate(dateStr) {
-  const date = new Date(dateStr);
-  return date.toLocaleDateString("en-US", { year: "numeric", month: "2-digit", day: "2-digit" });
+/* ----------------------------- timeline --------------------------- */
+
+const timelineEl = document.getElementById("timeline");
+
+function renderTimeline() {
+  if (!timelineEl) return;
+  const t = currentLang();
+
+  timelineEl.innerHTML = career.map(group => {
+    const isMultiRole = group.roles.length > 1;
+    const period = formatPeriod(group, t);
+    const duration = formatDuration(group.start, group.end, t);
+
+    const meta = [];
+    meta.push(`<span class="group-meta-item">${escapeHtml(duration)}</span>`);
+    meta.push(`<span class="group-meta-dot">•</span>`);
+    meta.push(`<span class="group-meta-item">${escapeHtml(t.rolesCount(group.roles.length))}</span>`);
+    if (isMultiRole) {
+      meta.push(`<span class="group-meta-dot">•</span>`);
+      meta.push(`<span class="group-meta-item group-promo">${escapeHtml(t.currentRole)}: ${escapeHtml(t.roles[group.roles[0].roleKey])}</span>`);
+    }
+
+    const steps = group.roles.map(role => {
+      const roleName = t.roles[role.roleKey] || role.roleKey;
+      return `
+        <li class="role-step${role.current ? " current" : ""}" data-exp="${role.key}" role="button" tabindex="0"
+            aria-label="${escapeHtml(`${group.company} — ${roleName}, ${formatPeriod(role, t)}`)}">
+          <span class="role-step-rail"><span class="role-step-dot"></span></span>
+          <span class="role-step-body">
+            <span class="role-step-title">
+              ${escapeHtml(roleName)}
+              ${role.current ? `<span class="role-step-badge">${escapeHtml(t.currentRole)}</span>` : ""}
+            </span>
+            <span class="role-step-date">${escapeHtml(formatPeriod(role, t))}</span>
+          </span>
+        </li>`;
+    }).join("");
+
+    return `
+      <div class="timeline-item${group.current ? " current" : ""}${isMultiRole ? " multi-role" : ""}">
+        <div class="timeline-marker"></div>
+        <div class="timeline-content">
+          <div class="timeline-header">
+            <h3>${escapeHtml(group.company)}</h3>
+            <span class="timeline-date">${escapeHtml(period)}</span>
+          </div>
+          <div class="timeline-meta">${meta.join("")}</div>
+          ${isMultiRole
+            ? `<ul class="role-steps">${steps}</ul>`
+            : `<ul class="role-steps single">${steps}</ul>`}
+        </div>
+      </div>`;
+  }).join("");
+
+  const summary = document.getElementById("experience-summary");
+  if (summary) summary.innerText = totalExperienceLabel(t);
 }
+
+/* --------------------------- education ---------------------------- */
+
+const educationEl = document.getElementById("education-list");
+
+function renderEducation() {
+  if (!educationEl) return;
+  const t = currentLang();
+
+  educationEl.innerHTML = education.map(item => {
+    const period = item.start === item.end ? item.start : `${item.start} – ${item.end}`;
+    const logo = item.logo
+      ? `<span class="edu-logo"><img src="${escapeHtml(item.logo)}" alt="${escapeHtml(item.institution)}" loading="lazy" /></span>`
+      : `<span class="edu-logo" aria-hidden="true">${escapeHtml(item.monogram)}</span>`;
+
+    return `
+      <li class="edu-item">
+        ${logo}
+        <div class="edu-body">
+          <div class="edu-header">
+            <h4 class="edu-institution">${escapeHtml(item.institution)}</h4>
+            <span class="edu-date">${escapeHtml(period)}</span>
+          </div>
+          <span class="edu-degree">${escapeHtml(t.degrees[item.degreeKey] || item.degreeKey)}</span>
+        </div>
+      </li>`;
+  }).join("");
+
+  const summary = document.getElementById("education-summary");
+  if (summary) summary.innerText = t.educationCount(education.length);
+}
+
+/* ------------------------- certifications ------------------------- */
+
+const certificationsEl = document.getElementById("certifications-list");
+
+/* only build a link when the credential pattern is a known public verifier */
+function certUrl(cert) {
+  if (cert.url) return cert.url;
+  if (cert.credential && /^UC-/i.test(cert.credential)) {
+    return `https://www.udemy.com/certificate/${encodeURIComponent(cert.credential)}/`;
+  }
+  return null;
+}
+
+function formatIssued(issued, t) {
+  const [year, month] = issued.split("-").map(Number);
+  return `${t.months[month - 1]} ${year}`;
+}
+
+function renderCertifications() {
+  if (!certificationsEl) return;
+  const t = currentLang();
+
+  if (certifications.length === 0) {
+    certificationsEl.innerHTML = `<li class="cert-empty">${escapeHtml(t.certEmpty)}</li>`;
+    return;
+  }
+
+  const items = certifications.map(cert => {
+    const url = certUrl(cert);
+    const issued = formatIssued(cert.issued, t);
+
+    const skills = cert.skills && cert.skills.length
+      ? `<span class="cert-skills">${cert.skills.map(s => `<span class="cert-skill">${escapeHtml(s)}</span>`).join("")}</span>`
+      : "";
+
+    const credential = cert.credential
+      ? `<span class="cert-code" title="${escapeHtml(t.certCode)}">${escapeHtml(cert.credential)}</span>`
+      : "";
+
+    const link = url
+      ? `<a class="cert-link" href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer">
+           ${escapeHtml(t.certCredential)}
+           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+         </a>`
+      : "";
+
+    return `
+      <li class="cert-item">
+        <span class="cert-icon" aria-hidden="true">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2 4 5v6c0 5 3.4 9.4 8 11 4.6-1.6 8-6 8-11V5l-8-3Z"/><polyline points="9 12 11 14 15 10"/></svg>
+        </span>
+        <div class="cert-body">
+          <span class="cert-name">${escapeHtml(cert.name)}</span>
+          <span class="cert-meta">${escapeHtml(cert.issuer)} · ${escapeHtml(t.certIssued)} ${escapeHtml(issued)}</span>
+          ${skills}
+          ${credential}
+          ${link}
+        </div>
+      </li>`;
+  }).join("");
+
+  certificationsEl.innerHTML = items;
+
+  const note = document.getElementById("cert-note");
+  if (note) {
+    const withLink = certifications.filter(c => certUrl(c)).length;
+    note.textContent = withLink > 0
+      ? t.certNote.replace("{n}", String(withLink))
+      : "";
+    note.hidden = withLink === 0;
+  }
+}
+
+/* --------------------------------- tabs --------------------------- */
+
+const TABS = ["experience", "education", "certifications"];
+const TAB_STORAGE_KEY = "tab";
+let activeTab = "experience";
+
+function getTabMeta(tab) {
+  const t = currentLang();
+  if (tab === "education") return t.educationCount(education.length);
+  if (tab === "certifications") return t.certificationsCount(certifications.length);
+  return totalExperienceLabel(t);
+}
+
+function updateCardMeta() {
+  const meta = document.getElementById("card-meta");
+  if (meta) meta.textContent = getTabMeta(activeTab);
+}
+
+function setActiveTab(tab, options = {}) {
+  if (!TABS.includes(tab)) tab = "experience";
+  activeTab = tab;
+
+  TABS.forEach(name => {
+    const btn = document.getElementById(`tab-${name}`);
+    const panel = document.getElementById(`panel-${name}`);
+    const isActive = name === tab;
+    if (btn) {
+      btn.classList.toggle("active", isActive);
+      btn.setAttribute("aria-selected", String(isActive));
+      btn.tabIndex = isActive ? 0 : -1;
+    }
+    if (panel) {
+      panel.classList.toggle("active", isActive);
+      panel.hidden = !isActive;
+    }
+  });
+
+  updateCardMeta();
+
+  if (options.persist !== false) {
+    try {
+      localStorage.setItem(TAB_STORAGE_KEY, tab);
+    } catch (_) {
+      /* ignore storage failures */
+    }
+  }
+}
+
+const tabsEl = document.getElementById("card-tabs");
+if (tabsEl) {
+  tabsEl.addEventListener("click", e => {
+    const btn = e.target.closest(".card-tab");
+    if (btn) setActiveTab(btn.dataset.tab);
+  });
+
+  tabsEl.addEventListener("keydown", e => {
+    if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
+    e.preventDefault();
+    const next = TABS[(TABS.indexOf(activeTab) + (e.key === "ArrowRight" ? 1 : -1) + TABS.length) % TABS.length];
+    setActiveTab(next);
+    document.getElementById(`tab-${next}`).focus();
+  });
+}
+
+/* ------------------------- experience modal ----------------------- */
 
 const expModal = document.getElementById("exp-modal");
 const expContent = document.getElementById("exp-content");
+const SECTION_ORDER = ["impact", "engineering", "leadership", "observability", "domain", "infra"];
+let lastExpKey = null;
 
-const expData = {
-  ml2: {
-    company: "Mercado Livre",
-    role: "Software Technical Leader",
-    period: "Jul 2025 - Atual",
-    desc: "Atuação como liderança técnica com foco em confiabilidade, qualidade e evolução sustentável de sistemas críticos de logística.",
-    impact: [
-      "Definição de arquitetura para sistemas de alta escala com foco em alta disponibilidade e resiliência",
-      "Elevação do padrão de engenharia do time (testes, boas práticas, revisão técnica)",
-      "Atuação preventiva em segurança, mitigando vulnerabilidades (CVE)",
-      "Alinhamento entre engenharia e stakeholders, traduzindo necessidades de negócio em soluções técnicas"
-    ],
-    leadership: [
-      "Condução de RFCs e decisões arquiteturais complexas",
-      "Apoio ao time em threat modeling, system design e debugging avançado",
-      "Desenvolvimento de pessoas via 1:1, mentoring e definição de padrões técnicos"
-    ],
-    observability: [
-      "Responsável por garantir SLOs, disponibilidade e confiabilidade das aplicações",
-      "Definição e evolução de práticas de observabilidade em conjunto com SRE",
-      "Atuação estruturada em incident response e gestão de crises",
-      "Condução de postmortems e melhoria contínua baseada em dados",
-      "Uso avançado de Datadog, New Relic e Grafana para visibilidade ponta a ponta"
-    ],
-    tags: ["Go", "Datadog", "Grafana", "SRE", "RFC", "Segurança", "Arquitetura"]
-  },
-  ml1: {
-    company: "Mercado Livre",
-    role: "Sr Software Engineer",
-    period: "Ago 2021 - Jun 2025",
-    desc: "Atuação em sistemas críticos de logística (Mercado Envios), responsáveis pelo fluxo de outbound, por onde passam todos os pacotes da plataforma antes da distribuição.",
-    impact: [
-      "Evolução de sistemas com alta taxa RPM em ambiente distribuído",
-      "Definição e condução de RFCs, apoiando decisões arquiteturais e alinhamento com stakeholders",
-      "Tradução de fluxos logísticos complexos em soluções escaláveis e resilientes",
-      "Atuação em rollout direto na operação logística (centros de distribuição)"
-    ],
-    engineering: [
-      "Microservices em Go com frontends em React (mobile-oriented)",
-      "Arquitetura orientada a eventos (Pub/Sub, Kinesis)",
-      "Uso de Redis (cache + distributed locking)",
-      "Persistência distribuída (MySQL, DynamoDB) e analytics com BigQuery",
-      "Deploy multi-região (AWS + GCP) via plataforma Fury"
-    ],
-    observability: [
-      "Responsável por garantir estabilidade de aplicações 24/7 em parceria com times de SRE",
-      "Monitoramento contínuo utilizando Datadog, New Relic e Grafana",
-      "Atuação ativa em incidentes de produção, análise de causa raiz e recuperação de serviços",
-      "Condução de postmortems, focando em aprendizado sistêmico e prevenção de recorrência",
-      "Evolução de métricas, logs e traces para melhoria de visibilidade e diagnóstico"
-    ],
-    tags: ["Go", "React", "Kinesis", "Redis", "AWS", "GCP", "DynamoDB", "BigQuery"]
-  },
-  voll: {
-    company: "VOLL",
-    role: "Especialista Software Developer",
-    period: "Mai 2021 - Jul 2021",
-    desc: "Atuação em iniciativa estratégica de evolução da camada de identidade da plataforma SaaS, com foco em suportar integrações enterprise e autenticação federada para clientes corporativos.",
-    impact: [
-      "Estudo e proposição de arquitetura para IAM em ambiente SaaS multi-tenant",
-      "Avaliação de soluções de mercado para autenticação federada (Auth0, AWS IAM)",
-      "Definição de abordagem para suporte a OpenID Connect / SSO",
-      "Redução de complexidade operacional e melhoria de segurança no onboarding"
-    ],
-    domain: [
-      "Modelagem de cenários de autenticação e autorização em contexto B2B multi-tenant",
-      "Análise de isolamento de tenants e implicações de segurança",
-      "Estruturação de fluxos de login federado e integração com IdPs externos"
-    ],
-    tags: ["IAM", "OAuth", "OIDC", "SSO", "SaaS", "Multi-tenant", "Auth0"]
-  },
-  sp3: {
-    company: "Softplan",
-    role: "Especialista Software Developer",
-    period: "Dez 2020 - Mai 2021",
-    desc: "Atuação como referência técnica na evolução do ecossistema de frontend da unidade de justiça, impactando transversalmente Ministério Público, Tribunal de Justiça e demais verticais.",
-    impact: [
-      "Liderança técnica na consolidação de arquitetura de Micro Front-Ends para múltiplos domínios jurídicos",
-      "Evolução do Design System do SAJ, garantindo consistência em interfaces complexas",
-      "Apoio a decisões arquiteturais envolvendo trade-offs entre performance e experiência",
-      "Influência direta na produtividade dos times ao reduzir complexidade acidental"
-    ],
-    leadership: [
-      "Atuação como ponte entre domínio jurídico e engenharia",
-      "Definição de padrões para construção de interfaces baseadas em workflows complexos",
-      "Disseminação de boas práticas em ambiente multi-times e multi-domínio"
-    ],
-    tags: ["Micro Frontends", "Design System", "JavaScript", "APM", "Workflow"]
-  },
-  sp2: {
-    company: "Softplan",
-    role: "Software Developer",
-    period: "Jul 2020 - Dez 2020",
-    desc: "Atuação no time de Plataforma com foco na padronização e escalabilidade do ecossistema frontend utilizado no Tribunal de Justiça.",
-    impact: [
-      "Evolução da arquitetura de Micro Front-Ends para suportar diferentes domínios processuais",
-      "Padronização de interfaces críticas, garantindo consistência na navegação",
-      "Atuação no desenvolvimento do projeto JEP (Tribunal da Paz)"
-    ],
-    engineering: [
-      "Organização de frontends baseados em estados complexos e regras de negócio dinâmicas",
-      "Estruturação de builds e pipelines para múltiplos times e aplicações",
-      "Observabilidade de aplicações críticas com Elastic APM e Grafana"
-    ],
-    tags: ["Node.js", "Elastic APM", "Grafana", "Kubernetes", "Micro Frontends"]
-  },
-  sp1: {
-    company: "Softplan",
-    role: "Software Developer",
-    period: "Out 2018 - Jul 2020",
-    desc: "Atuação no desenvolvimento de sistemas do ecossistema SAJ voltados ao Ministério Público, suportando o ciclo completo de processos jurídicos.",
-    impact: [
-      "Desenvolvimento de serviços e interfaces que suportam o fluxo processual do MP",
-      "Implementação de pipelines de extração de dados externos (web scraping)",
-      "Evolução de APIs (REST/GraphQL) para desacoplamento e integração",
-      "Atuação em modernização progressiva, equilibrando tecnologia com sistemas legados"
-    ],
-    engineering: [
-      "Modelagem de fluxos com múltiplos estados e transições (process lifecycle)",
-      "Garantia de idempotência e consistência em operações sensíveis",
-      "Estruturação de pipelines CI/CD e deploy em Kubernetes"
-    ],
-    tags: ["Node.js", "Java", "REST", "GraphQL", "Kubernetes", "Web Scraping"]
-  },
-  onclick: {
-    company: "OnClick Sistemas",
-    role: "Analista de Sistema",
-    period: "Jun 2013 - Set 2018",
-    desc: "Atuação full-stack no desenvolvimento e evolução de um ERP com forte foco em integrações de eCommerce em larga escala, conectando a plataforma a múltiplos marketplaces, gateways de frete e serviços externos.",
-    impact: [
-      "Construção e manutenção de integrações com plataformas como VTEX, Rakuten",
-      "Implementação de integrações com gateways de frete como Intelipost",
-      "Evolução da arquitetura de integração utilizando mensageria (RabbitMQ)",
-      "Participação na modernização do stack, incluindo introdução de Node.js",
-      "Suporte a áreas críticas (implantação, atendimento, clientes)"
-    ],
-    engineering: [
-      "Desenvolvimento de APIs e serviços distribuídos para integração entre sistemas heterogêneos",
-      "Experiência com mensageria (AMQP) para processamento assíncrono",
-      "Atuação em controle de versão, CI/CD e automação de processos",
-      "Introdução e uso de testes automatizados em ambiente Delphi (DUnit/DUnitX)"
-    ],
-    infra: [
-      "Responsável por ambiente Delphi (atualizações, componentes e estabilidade)",
-      "Experiência com containerização (Docker) e primeiros passos em cloud (AWS, Azure, Heroku)",
-      "Atuação em ambiente com múltiplos bancos de dados (Firebird, SQL Server, PostgreSQL)"
-    ],
-    tags: ["Delphi", "Node.js", "RabbitMQ", "Docker", "AWS", "Azure", "VTEX", "ERP"]
-  },
-  sypan: {
-    company: "SYSPAN",
-    role: "Desenvolvedor",
-    period: "Abr 2012 - Jun 2013",
-    desc: "Atuação no desenvolvimento e sustentação de sistemas comerciais com foco em processos fiscais (NFe e ECF), lidando com regras complexas e alta exigência de conformidade.",
-    impact: [
-      "Desenvolvimento de funcionalidades fiscais (NFe/ECF), garantindo conformidade com requisitos legais",
-      "Atuação direta com clientes em implantação e suporte",
-      "Diagnóstico e resolução de problemas em ambientes produtivos"
-    ],
-    engineering: [
-      "Desenvolvimento em Delphi e .NET com integração a banco MySQL",
-      "Experiência inicial com controle de versão (SVN) e colaboração em equipe",
-      "Contato direto com ciclo completo: desenvolvimento → implantação → suporte"
-    ],
-    tags: ["Delphi", ".NET", "MySQL", "NFe", "ECF", "SEFAZ"]
-  },
-  cnpm: {
-    company: "CNPM Tecnologia",
-    role: "Desenvolvedor",
-    period: "Dez 2009 - Abr 2012",
-    desc: "Atuação no desenvolvimento de sistemas de consórcio utilizados por instituições financeiras, lidando com regras de negócio complexas, alta criticidade e forte exigência de consistência de dados. Iniciei como estagiário e fui efetivado em menos de 1 ano.",
-    impact: [
-      "Desenvolvimento e manutenção de funcionalidades em sistemas de consórcio integrados ao ecossistema bancário",
-      "Atuação em múltiplos módulos críticos, garantindo consistência e integridade de dados financeiros",
-      "Participação no processo de melhoria de qualidade que levou à certificação MPS.Br nível G",
-      "Experiência prática com processos formais de engenharia de software (nível F/G)"
-    ],
-    engineering: [
-      "Desenvolvimento em Delphi e aplicações web com .NET Framework",
-      "Utilização de SQL Server em cenários críticos de persistência de dados",
-      "Experiência com controle de versão (RCS) em ambiente colaborativo"
-    ],
-    tags: ["Delphi", ".NET", "SQL Server", "MPS.Br", "Finanças"]
+function findExpContext(key) {
+  for (const group of career) {
+    const role = group.roles.find(r => r.key === key);
+    if (role) return { group, role };
   }
-};
+  return null;
+}
 
 function openExpModal(expKey) {
-  const exp = expData[expKey];
-  if (!exp) return;
+  const t = currentLang();
+  const exp = t.exp[expKey];
+  const ctx = findExpContext(expKey);
+  if (!exp || !ctx) return;
+
+  const { group, role } = ctx;
+  lastExpKey = expKey;
+  const siblings = group.roles.length > 1
+    ? `<div class="exp-nav">
+         <span class="exp-nav-label">${escapeHtml(group.company)}</span>
+         <div class="exp-nav-items">
+           ${group.roles.map(r => {
+             const label = t.roles[r.roleKey] || r.roleKey;
+             return `<button class="exp-nav-item${r.key === expKey ? " active" : ""}" data-exp="${r.key}">${escapeHtml(label)}</button>`;
+           }).join("")}
+         </div>
+       </div>`
+    : "";
 
   let html = `
+    ${siblings}
     <div class="exp-log-title">
-      <h2>${exp.company} | ${exp.role}</h2>
-      <span>${exp.period}</span>
+      <h2>${escapeHtml(group.company)} | ${escapeHtml(t.roles[role.roleKey] || role.roleKey)}</h2>
+      <span>${escapeHtml(formatPeriod(role, t))} · ${escapeHtml(formatDuration(role.start, role.end, t))}</span>
     </div>
     <div class="exp-log-line level-info">
-      <div class="exp-log-message">${exp.desc}</div>
+      <div class="exp-log-message">${escapeHtml(exp.desc)}</div>
     </div>
   `;
 
-  if (exp.impact) {
+  SECTION_ORDER.forEach(section => {
+    if (!exp[section]) return;
     html += `
       <div class="exp-log-section">
-        <div class="exp-log-section-title">Impacto Direto</div>
-        <ul class="exp-log-list">${exp.impact.map(i => `<li>${i}</li>`).join("")}</ul>
-      </div>
-    `;
-  }
+        <div class="exp-log-section-title">${escapeHtml(t.expSections[section])}</div>
+        <ul class="exp-log-list">${exp[section].map(i => `<li>${escapeHtml(i)}</li>`).join("")}</ul>
+      </div>`;
+  });
 
-  if (exp.engineering) {
-    html += `
-      <div class="exp-log-section">
-        <div class="exp-log-section-title">Engenharia & Plataforma</div>
-        <ul class="exp-log-list">${exp.engineering.map(i => `<li>${i}</li>`).join("")}</ul>
-      </div>
-    `;
-  }
-
-  if (exp.leadership) {
-    html += `
-      <div class="exp-log-section">
-        <div class="exp-log-section-title">Liderança & Engenharia</div>
-        <ul class="exp-log-list">${exp.leadership.map(i => `<li>${i}</li>`).join("")}</ul>
-      </div>
-    `;
-  }
-
-  if (exp.observability) {
-    html += `
-      <div class="exp-log-section">
-        <div class="exp-log-section-title">Observabilidade & Operação</div>
-        <ul class="exp-log-list">${exp.observability.map(i => `<li>${i}</li>`).join("")}</ul>
-      </div>
-    `;
-  }
-
-  if (exp.domain) {
-    html += `
-      <div class="exp-log-section">
-        <div class="exp-log-section-title">Engenharia no Domínio</div>
-        <ul class="exp-log-list">${exp.domain.map(i => `<li>${i}</li>`).join("")}</ul>
-      </div>
-    `;
-  }
-
-  if (exp.infra) {
-    html += `
-      <div class="exp-log-section">
-        <div class="exp-log-section-title">Infraestrutura & Plataforma</div>
-        <ul class="exp-log-list">${exp.infra.map(i => `<li>${i}</li>`).join("")}</ul>
-      </div>
-    `;
-  }
-
-  html += `<div class="exp-tags">${exp.tags.map(t => `<span class="exp-tag">${t}</span>`).join("")}</div>`;
+  html += `<div class="exp-tags">${exp.tags.map(tag => `<span class="exp-tag">${escapeHtml(tag)}</span>`).join("")}</div>`;
 
   expContent.innerHTML = html;
+  expContent.scrollTop = 0;
   expModal.classList.add("active");
+
+  expContent.querySelectorAll(".exp-nav-item").forEach(btn => {
+    btn.addEventListener("click", () => openExpModal(btn.dataset.exp));
+  });
 }
 
 function closeExpModal() {
   expModal.classList.remove("active");
 }
 
-document.querySelectorAll(".timeline-item.clickable").forEach(item => {
-  item.addEventListener("click", () => {
-    const expKey = item.dataset.exp;
-    openExpModal(expKey);
+if (timelineEl) {
+  timelineEl.addEventListener("click", e => {
+    const step = e.target.closest(".role-step");
+    if (step) openExpModal(step.dataset.exp);
   });
-});
+
+  timelineEl.addEventListener("keydown", e => {
+    if (e.key !== "Enter" && e.key !== " ") return;
+    const step = e.target.closest(".role-step");
+    if (!step) return;
+    e.preventDefault();
+    openExpModal(step.dataset.exp);
+  });
+}
 
 document.getElementById("exp-close").addEventListener("click", closeExpModal);
 expModal.querySelector(".terminal-overlay").addEventListener("click", closeExpModal);
 
+/* ------------------------------ terminal -------------------------- */
+
 const modal = document.getElementById("terminal-modal");
 const terminalOutput = document.getElementById("terminal-output");
 const terminalInput = document.getElementById("terminal-input");
+const commandHistory = [];
+let historyIndex = -1;
 
 function openTerminal() {
   modal.classList.add("active");
@@ -311,247 +533,411 @@ document.getElementById("terminal-btn").addEventListener("click", openTerminal);
 document.getElementById("terminal-close").addEventListener("click", closeTerminal);
 modal.querySelector(".terminal-overlay").addEventListener("click", closeTerminal);
 
-document.addEventListener("keydown", (e) => {
+document.addEventListener("keydown", e => {
   if (e.key === "Escape") {
     if (expModal.classList.contains("active")) closeExpModal();
     else if (modal.classList.contains("active")) closeTerminal();
   }
 });
 
-function print(msg) {
+function print(msg, cls) {
   const div = document.createElement("div");
-  div.innerText = msg;
+  /* textContent (not innerText) so box-drawing alignment is preserved verbatim */
+  div.textContent = msg;
+  if (cls) div.className = cls;
   terminalOutput.appendChild(div);
   terminalOutput.scrollTop = terminalOutput.scrollHeight;
 }
 
+const MAX_BOX_WIDTH = 52;
+const MAX_CELL_WIDTH = 34;
+const truncate = (str, max = MAX_CELL_WIDTH) => {
+  const chars = [...String(str)];
+  return chars.length > max ? chars.slice(0, max - 1).join("") + "…" : chars.join("");
+};
+
 function printASCIITable(headers, rows) {
-  const colWidths = headers.map((h, i) => Math.max(h.length, ...rows.map(r => (r[i] || "").length)));
-  
+  const safeHeaders = headers.map(h => truncate(h));
+  const safeRows = rows.map(r => r.map(cell => truncate(cell || "")));
+  const colWidths = safeHeaders.map((h, i) => Math.max(h.length, ...safeRows.map(r => (r[i] || "").length)));
   const separator = "+" + colWidths.map(w => "-".repeat(w + 2)).join("+") + "+";
-  
+
   print(separator);
-  print("| " + headers.map((h, i) => h.padEnd(colWidths[i])).join(" | ") + " |");
+  print("| " + safeHeaders.map((h, i) => h.padEnd(colWidths[i])).join(" | ") + " |");
   print(separator.replace(/\+/g, "=").replace(/-/g, "="));
-  
-  rows.forEach(row => {
-    print("| " + row.map((cell, i) => (cell || "").padEnd(colWidths[i])).join(" | ") + " |");
+  safeRows.forEach(row => {
+    print("| " + row.map((cell, i) => cell.padEnd(colWidths[i])).join(" | ") + " |");
   });
-  
   print(separator);
+}
+
+function printBox(title, lines, innerWidth = 44) {
+  /* hard cap so the box never overflows the terminal panel width */
+  const fit = line => truncate(line, MAX_BOX_WIDTH - 3);
+  const content = [title, ...lines].map(fit);
+  const width = Math.max(Math.min(innerWidth, MAX_BOX_WIDTH - 3), ...content.map(l => [...l].length)) + 2;
+
+  print("╔" + "═".repeat(width) + "╗");
+  print("║ " + content[0].padEnd(width - 1) + "║");
+  print("╠" + "═".repeat(width) + "╣");
+  content.slice(1).forEach(l => print("║ " + l.padEnd(width - 1) + "║"));
+  print("╚" + "═".repeat(width) + "╝");
 }
 
 const terminalCommands = {
   help: () => {
-    print("Available commands:");
-    print("  help         - Show this help");
-    print("  about        - About me");
-    print("  skills       - Tech skills");
-    print("  contact      - Contact info");
-    print("  status       - System status");
-    print("  experience   - Work experience");
-    print("  projects     - GitHub repositories");
-    print("  clear        - Clear terminal");
-    print("  whoami       - Who am I");
+    const t = currentLang().terminal;
+    const lines = [];
+    t.help.sections.forEach((section, i) => {
+      if (i > 0) lines.push("");
+      lines.push(section.title.toUpperCase());
+      section.items.forEach(([cmd, desc]) => lines.push("  " + cmd.padEnd(17) + desc));
+    });
+    printBox(t.help.title, lines);
   },
-  
+
+  man: (args) => {
+    const cmd = args.trim().split(/\s+/)[0];
+    const t = currentLang().terminal;
+    const all = t.help.sections.flatMap(s => s.items);
+    const entry = all.find(([name]) => name === cmd || name.startsWith(cmd + " "));
+    if (!entry) {
+      print(t.sys.noManPage(cmd || ""));
+      return;
+    }
+    printBox(entry[0], [entry[1], "", t.manSeeAlso + ": help"], 40);
+  },
+
+  lang: (args) => {
+    const t = currentLang().terminal.lang;
+    const requested = args.trim().toLowerCase().split(/\s+/).filter(Boolean);
+    if (requested.length === 0) {
+      print(t.current(activeLang));
+      print(t.available);
+      return;
+    }
+    const target = requested[0].split("-")[0];
+    if (!SUPPORTED_LANGS.includes(target)) {
+      print(t.invalid(requested[0]));
+      return;
+    }
+    applyI18n(target);
+    print(currentLang().terminal.lang.changed(target));
+  },
+
   about: () => {
-    print("═".repeat(50));
-    print("  Renato Oda");
-    print("  Tech Lead @ Mercado Livre");
-    print("═".repeat(50));
-    print("");
-    print("  Building and operating high-scale distributed systems");
-    print("  with focus on reliability, resilience, and operational");
-    print("  excellence.");
-    print("");
-    print("  Responsible for critical logistics chain (Outbound)");
-    print("  applications processing high request volume in 24/7.");
-    print("═".repeat(50));
+    const c = currentLang();
+    printBox(c.terminal.about.role, [
+      c.terminal.about.name,
+      "",
+      ...wrap(c.terminal.about.line, 44).split("\n"),
+      "",
+      ...wrap(c.aboutText, 44).split("\n")
+    ]);
   },
-  
+
   skills: () => {
-    print("╔══════════════════════════════════════════════════╗");
-    print("║  Tech Stack                                      ║");
-    print("╠══════════════════════════════════════════════════╣");
-    print("║  Platform & Infra                                 ║");
-    print("║  Kubernetes, Docker, Terraform, Helm, ArgoCD    ║");
-    print("║  AWS, GCP, GitOps                                 ║");
-    print("╠══════════════════════════════════════════════════╣");
-    print("║  Observability                                    ║");
-    print("║  Prometheus, Grafana, Datadog, Jaeger            ║");
-    print("║  OpenTelemetry, ELK Stack                         ║");
-    print("╠══════════════════════════════════════════════════╣");
-    print("║  Languages                                        ║");
-    print("║  Go, Python, TypeScript, JavaScript, Bash         ║");
-    print("╠══════════════════════════════════════════════════╣");
-    print("║  Data & Messaging                                 ║");
-    print("║  PostgreSQL, Redis, Kafka, RabbitMQ              ║");
-    print("║  Elasticsearch, gRPC                              ║");
-    print("╚══════════════════════════════════════════════════╝");
+    const { skills } = currentLang().terminal;
+    const lines = [];
+    skills.sections.forEach((section, i) => {
+      if (i > 0) lines.push("");
+      lines.push(section.title);
+      section.items.forEach(item => lines.push("  " + item));
+    });
+    printBox(skills.title, lines);
   },
-  
+
   contact: () => {
-    print("╔══════════════════════════════════════════════════╗");
-    print("║  Contact Information                              ║");
-    print("╠══════════════════════════════════════════════════╣");
-    print("║  Email:    renato.oda2@gmail.com                 ║");
-    print("║  LinkedIn: linkedin.com/in/renatooda             ║");
-    print("║  GitHub:   github.com/oda2                       ║");
-    print("╚══════════════════════════════════════════════════╝");
+    const { contact } = currentLang().terminal;
+    printBox(contact.title, [
+      "Email     renato.oda2@gmail.com",
+      "LinkedIn  linkedin.com/in/renatooda",
+      "GitHub    github.com/oda2"
+    ]);
   },
-  
+
   status: () => {
-    print("╔══════════════════════════════════════════════════╗");
-    print("║  System Status                                    ║");
-    print("╠══════════════════════════════════════════════════╣");
-    print("║  ✓ API Gateway       Operational      99.99%     ║");
-    print("║  ✓ Database          Operational      99.95%     ║");
-    print("║  ✓ Cache Layer       Operational      99.99%     ║");
-    print("║  ✓ Message Queue     Operational      99.99%     ║");
-    print("╠══════════════════════════════════════════════════╣");
-    print("║  Global Uptime: 99.95% (30-day rolling)          ║");
-    print("║  Avg RPM: 20,000+  |  Latency P99: <50ms          ║");
-    print("║  Active Incidents: 0                              ║");
-    print("╚══════════════════════════════════════════════════╝");
+    const { status } = currentLang().terminal;
+    const nameWidth = Math.max(...status.services.map(([n]) => n.length));
+    const lines = status.services.map(([name, uptime]) =>
+      `✓ ${name.padEnd(nameWidth)}  ${status.operational.padEnd(11)}${uptime}`
+    );
+    lines.push("");
+    status.summary.forEach(s => lines.push(s));
+    printBox(status.title, lines);
   },
-  
+
   experience: () => {
-    print("╔══════════════════════════════════════════════════╗");
-    print("║  Work Experience                                   ║");
-    print("╠══════════════════════════════════════════════════╣");
-    print("║  2022-Present  Mercado Livre                      ║");
-    print("║              Tech Lead - Outbound Logistics       ║");
-    print("║              • 20k+ RPM critical systems          ║");
-    print("║              • Prometheus/Grafana/Datadog         ║");
-    print("║              • SRE, GitOps, ArgoCD                ║");
-    print("╠══════════════════════════════════════════════════╣");
-    print("║  2019-2022    Softplan                            ║");
-    print("║              Senior Specialist                    ║");
-    print("║              • SAJ platform (judicial system)     ║");
-    print("║              • Micro frontends, Design System     ║");
-    print("╠══════════════════════════════════════════════════╣");
-    print("║  2017-2019    OnClick                             ║");
-    print("║              Analyst Developer                   ║");
-    print("║              • eCommerce integrations             ║");
-    print("╠══════════════════════════════════════════════════╣");
-    print("║  2015-2017    Sypan                               ║");
-    print("║              Developer                            ║");
-    print("║              • Fiscal systems (NF-e, ECF)        ║");
-    print("╚══════════════════════════════════════════════════╝");
+    const t = currentLang();
+    const lines = [];
+
+    career.forEach((group, gi) => {
+      if (gi > 0) lines.push("");
+      lines.push(group.company);
+      lines.push("  " + formatPeriod(group, t) + " · " + t.rolesCount(group.roles.length));
+      group.roles.forEach(role => {
+        lines.push("    • " + t.roles[role.roleKey]);
+        lines.push("        " + formatPeriod(role, t));
+      });
+    });
+
+    printBox(t.terminal.experience.title, lines);
   },
-  
+
   projects: async () => {
-    print("Fetching GitHub repositories...");
+    const t = currentLang().terminal.projects;
+    print(t.fetching);
     try {
       const res = await fetch(`https://api.github.com/users/${username}/repos?sort=updated&per_page=10`);
       const repos = await res.json();
-      
-      if (repos.length === 0) {
-        print("No public repositories found.");
+
+      if (!Array.isArray(repos) || repos.filter(r => !r.fork).length === 0) {
+        print(t.empty);
         return;
       }
-      
+
+      const source = repos.filter(r => !r.fork).slice(0, 8);
       print("");
-      printASCIITable(
-        ["Name", "Lang", "URL"],
-        repos.filter(r => !r.fork).slice(0, 8).map(r => [
-          r.name.length > 25 ? r.name.substring(0, 22) + "..." : r.name,
-          r.language || "-",
-          "github.com/" + username + "/" + r.name
-        ])
-      );
+      printASCIITable(t.headers, source.map(r => [
+        r.name.length > 25 ? r.name.substring(0, 22) + "..." : r.name,
+        r.language || "-",
+        "github.com/" + username + "/" + r.name
+      ]));
       print("");
-      print("Total repos: " + repos.filter(r => !r.fork).length + " | View all: github.com/" + username);
+      print(t.total(repos.filter(r => !r.fork).length) + " | " + t.viewAll + ": github.com/" + username);
     } catch (e) {
-      print("Error fetching repositories: " + e.message);
+      print(t.error + ": " + e.message);
     }
   },
-  
+
+  whoami: () => print(currentLang().terminal.whoami),
+
+  uptime: () => print(currentLang().terminal.uptime),
+
+  pwd: () => {
+    const s = currentLang().terminal.sys;
+    print(s.cwd);
+    print("# " + s.pathHint);
+  },
+
+  date: () => {
+    const t = currentLang();
+    print(new Date().toLocaleString(t.htmlLang, { dateStyle: "full", timeStyle: "medium" }));
+  },
+
+  uname: (args) => {
+    const all = args.trim().startsWith("-a");
+    const platform = (navigator.userAgentData && navigator.userAgentData.platform) || navigator.platform || "Linux";
+    const os = /mac/i.test(platform) ? "Darwin" : /win/i.test(platform) ? "MINGW64_NT" : "Linux";
+    const kernel = /mac/i.test(platform)
+      ? "24.5.0 Darwin Kernel Version 24.5.0"
+      : "6.8.0-45-generic #45-Ubuntu SMP";
+    print(all ? `${os} workstation ${kernel} x86_64 GNU/Linux` : os);
+  },
+
+  echo: (args) => print(args.replace(/^["']|["']$/g, "")),
+
+  ls: () => {
+    const t = currentLang().terminal;
+    printASCIITable(t.sys.lsHeaders, t.sys.lsFiles.filter(f => !f[6].startsWith(".")));
+  },
+
+  ll: () => {
+    const t = currentLang().terminal;
+    print(t.sys.lsTotal);
+    printASCIITable(t.sys.lsHeaders, t.sys.lsFiles);
+  },
+
+  top: () => {
+    const s = currentLang().terminal.sys;
+    const now = new Date();
+    const time = now.toTimeString().slice(0, 8);
+    print(s.topHeader(time, "42 days"));
+    print(s.topTasks);
+    print(s.topCpu);
+    print(s.topMem);
+    printASCIITable(s.topHeaders, s.topRows);
+    print("");
+    print("q → " + currentLang().terminal.help.sections[1].items.find(([c]) => c === "exit")[1]);
+  },
+
+  ps: () => {
+    const s = currentLang().terminal.sys;
+    printASCIITable(s.psHeaders, s.psRows);
+  },
+
+  sudo: (args) => {
+    print(currentLang().terminal.sys.sudo);
+    if (args.trim()) print("# " + args.trim());
+  },
+
+  history: () => {
+    const t = currentLang().terminal;
+    if (commandHistory.length === 0) {
+      print(t.sys.historyEmpty);
+      return;
+    }
+    commandHistory.forEach((cmd, i) => print(String(i + 1).padStart(4) + "  " + cmd));
+  },
+
+  certs: (args) => {
+    const t = currentLang();
+    if (certifications.length === 0) {
+      print(t.certEmpty);
+      return;
+    }
+
+    const year = args.trim();
+    const filtered = year ? certifications.filter(c => c.issued.startsWith(year)) : certifications;
+    if (filtered.length === 0) {
+      print(t.certNoYear.replace("{y}", year));
+      return;
+    }
+
+    const shown = year ? filtered : filtered.slice(0, 10);
+    const lines = shown.map(c =>
+      `${formatIssued(c.issued, t).padEnd(9)} ${c.name}` + (c.issuer ? `  (${c.issuer})` : "")
+    );
+
+    printBox(year ? `${t.certificationsTitle} · ${year}` : t.certificationsTitle, lines, 60);
+
+    if (!year && filtered.length > shown.length) {
+      print(t.certMore.replace("{n}", String(filtered.length - shown.length)));
+    }
+  },
+
+  exit: () => {
+    print(currentLang().terminal.sys.closed);
+    closeTerminal();
+  },
+
+  cat: (args) => {
+    const t = currentLang().terminal;
+    const file = args.trim();
+    const content = t.cat[file];
+    if (content) content.forEach(line => print(line));
+    else print(t.noSuchFile(file || ""));
+  },
+
   clear: () => {
     terminalOutput.innerHTML = "";
     printWelcome();
-  },
-  
-  whoami: () => print("renato.oda - Tech Lead - @oda2"),
-  
-  uptime: () => print("System uptime: 99.95% (30-day rolling) | MTTR: <15min"),
-  
-  ls: () => {
-    print(".config/");
-    print(".credentials/ (hidden)");
-    print("experience.json");
-    print("skills.md");
-    print("about.txt");
-    print("contact.json");
-    print("README.md");
-  },
-  
-  cat: (args) => {
-    const file = args.trim();
-    if (file === "about.txt") {
-      print("Tech Lead @ Mercado Livre | Platform Engineering");
-      print("Building and operating high-scale distributed systems");
-      print("with focus on reliability, resilience, and operational");
-      print("excellence.");
-    } else if (file === "skills.md") {
-      print("## Tech Stack");
-      print("- Kubernetes, Docker, Terraform, ArgoCD");
-      print("- Prometheus, Grafana, Datadog, Jaeger");
-      print("- Go, Python, TypeScript, Bash");
-      print("- PostgreSQL, Redis, Kafka, Elasticsearch");
-    } else if (file === "contact.json") {
-      print('{');
-      print('  "email": "renato.oda2@gmail.com",');
-      print('  "linkedin": "linkedin.com/in/renatooda",');
-      print('  "github": "github.com/oda2"');
-      print('}');
-    } else if (file === "experience.json") {
-      print("{...} // Try 'experience' command for full details");
-    } else {
-      print("cat: " + file + ": No such file or directory");
-    }
   }
 };
 
+const COMMAND_ALIASES = {
+  close: "exit",
+  quit: "exit",
+  logout: "exit",
+  "clear-screen": "clear",
+  cls: "clear",
+  dir: "ll",
+  "ls -l": "ll",
+  "ls -la": "ll",
+  "man": "man",
+  "i": "man",
+  jobs: "ps",
+  "top -b": "top",
+  "shell": "pwd",
+  "print": "echo",
+  "lang-pt": "lang"
+};
+
+function resolveCommand(command) {
+  const cmd = command.toLowerCase();
+  const alias = COMMAND_ALIASES[cmd];
+  return terminalCommands[alias || cmd];
+}
+
+function wrap(text, width, indent = "") {
+  const words = text.split(/\s+/);
+  const lines = [];
+  let line = "";
+  words.forEach(word => {
+    if ((line + " " + word).trim().length > width) {
+      lines.push(line.trim());
+      line = word;
+    } else {
+      line = (line + " " + word).trim();
+    }
+  });
+  if (line) lines.push(line);
+  return lines.join("\n" + indent);
+}
+
 function printWelcome() {
-  print("╔══════════════════════════════════════════════════╗");
-  print("║  Terminal v1.0                                     ║");
-  print("╠══════════════════════════════════════════════════╣");
-  print("║  Type 'help' for available commands                ║");
-  print("║  Type 'projects' to see GitHub repos               ║");
-  print("║  Press 'Esc' to close                             ║");
-  print("╚══════════════════════════════════════════════════╝");
+  const t = currentLang().terminal;
+  printBox("Terminal v1.0", [t.welcome, t.welcomeHint, "Esc → close"], 44);
 }
 
 terminalInput.addEventListener("keydown", e => {
-  if (e.key === "Enter") {
-    const cmd = terminalInput.value.trim();
-    print("$ " + cmd);
-    
-    if (cmd) {
-      const [command, ...args] = cmd.split(" ");
-      if (terminalCommands[command]) {
-        terminalCommands[command](args.join(" "));
-      } else {
-        print("Command not found: " + command + ". Type 'help'.");
-      }
+  /* history navigation with the arrow keys */
+  if (e.key === "ArrowUp" || e.key === "ArrowDown") {
+    if (commandHistory.length === 0) return;
+    e.preventDefault();
+    historyIndex = e.key === "ArrowUp"
+      ? Math.min(historyIndex + 1, commandHistory.length - 1)
+      : historyIndex - 1;
+
+    if (historyIndex < 0) {
+      terminalInput.value = "";
+    } else {
+      terminalInput.value = commandHistory[commandHistory.length - 1 - historyIndex];
+      terminalInput.setSelectionRange(terminalInput.value.length, terminalInput.value.length);
     }
-    
-    terminalInput.value = "";
+    return;
   }
+
+  if (e.key !== "Enter") return;
+
+  const cmd = terminalInput.value.trim();
+  if (cmd) {
+    print(currentLang().terminal.prompt + " " + cmd);
+    commandHistory.push(cmd);
+    if (commandHistory[commandHistory.length - 2] !== cmd) commandHistory.pop();
+    historyIndex = -1;
+
+    const [command, ...args] = cmd.split(/\s+/);
+    const handler = resolveCommand(command);
+    if (handler) {
+      Promise.resolve(handler(args.join(" "))).catch(err => print(String(err)));
+    } else {
+      print(currentLang().terminal.commandNotFound(command));
+    }
+  }
+
+  terminalInput.value = "";
 });
+
+/* ----------------------------- bootstrap --------------------------- */
 
 document.addEventListener("DOMContentLoaded", () => {
-  const savedLang = localStorage.getItem("lang") || "pt";
-  document.getElementById("lang").value = savedLang;
-  applyI18n(savedLang);
+  const lang = getInitialLang();
+  applyI18n(lang);
+
+  let savedTab = "experience";
+  try {
+    savedTab = localStorage.getItem(TAB_STORAGE_KEY) || "experience";
+  } catch (_) {
+    /* ignore storage failures */
+  }
+  setActiveTab(savedTab, { persist: false });
+
   loadAvatar();
   printWelcome();
+
+  const yearEl = document.getElementById("year");
+  if (yearEl) yearEl.innerText = new Date().getFullYear();
 });
 
-document.getElementById("lang").addEventListener("change", (e) => {
-  const lang = e.target.value;
-  localStorage.setItem("lang", lang);
-  applyI18n(lang);
+document.getElementById("lang").addEventListener("change", e => {
+  applyI18n(e.target.value);
+});
+
+document.addEventListener("i18n:change", () => {
+  renderTimeline();
+  renderEducation();
+  renderCertifications();
+  updateCardMeta();
+  if (lastExpKey && expModal.classList.contains("active")) openExpModal(lastExpKey);
 });
